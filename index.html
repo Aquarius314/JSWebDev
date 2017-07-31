@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Planetoid</title>
+  <style>
+    * {padding: 0; margin: 0; }
+    canvas { background: #eee; display: block; margin: 0 auto; }
+  </style>
+</head>
+<body>
+
+  <canvas id="myCanvas" width=972 height=648></canvas>
+
+<script src="player.js"></script>
+<script src="planet.js"></script>
+<script src="point.js"></script>
+<script src="calculate.js"></script>
+<script src="render.js"></script>
+<script src="keyboardListener.js"></script>
+<script src="mouseListener.js"></script>
+<script src="levels.js"></script>
+<script>
+
+// testing zone v
+
+// testing zone ^
+
+  // game info and main objects
+  var canvas = document.getElementById('myCanvas');
+  var ctx = canvas.getContext('2d');
+  var player = new Player(100.0, 100.0);
+  var planets = [];
+  // planets.push(new Planet(230, 500, 80, 20, 10, "#0095FF"));
+  // planets.push(new Planet(400, 200, 40, 40, 7, "#FF95FF"));
+  // planets.push(new Planet(700, 400, 60, 60, 6, "#00FF00"));
+  chooseLevel(3);
+
+  document.addEventListener("keydown", keyDown, false);
+  document.addEventListener("keyup", keyUp, false);
+  document.addEventListener("mousemove", mouseMoveHandler, false);
+
+  function info() {
+    ctx.beginPath();
+    ctx.fillStyle = "black";
+    ctx.font = "bold 16px Arial";
+    ctx.fillText(keyboardInfo, 10, 20);
+    ctx.fillText(mouseInfo, 160, 20);
+    ctx.closePath();
+  }
+
+  function choosePlanetType(type, x, y) {
+    switch(type) {
+      case 1: // red - from zero to 40
+        planets.push(new Planet(x, y, 20, 20, 10, "red"));
+      break;
+      case 2: // green - big and small
+        planets.push(new Planet(x, y, 140, 20, 4, "#00FF00"));
+      break;
+      case 3: // blue - medium, fast amplitude
+        planets.push(new Planet(x, y, 100, 30, 16, "blue"));
+      break;
+      case 4: // yellow - giant, very slow
+        planets.push(new Planet(x, y, 120, 80, 2, "yellow"));
+
+      break;
+      default :
+        alert("Wrong type!");
+      break;
+    }
+  }
+
+  function getDrawables() {
+    var drawables = [];
+    for(var i = 0; i < planets.length; i++) {
+      drawables.push(planets[i]);
+    }
+    drawables.push(player);
+    return drawables;
+  }
+
+  function getColliders() {
+    var colliders = [];
+    for(var i = 0; i < planets.length; i++) {
+      colliders.push(planets[i]);
+    }
+    return colliders;
+  }
+
+  function gameLoop() {
+
+    player.move();
+    calculate();
+    render();
+    info();
+  }
+
+  setInterval(gameLoop, 10);
+
+</script>
+</body>
+</html>
